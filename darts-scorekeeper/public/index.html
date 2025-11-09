@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Darts Scorekeeper — 301 / 501</title>
+  <meta name="description" content="Single-page Darts scorekeeper for 301/501 legs and sets." />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="app-header" role="banner">
+    <h1 aria-label="Darts Scorekeeper Application">
+      🎯 Darts Scorekeeper <span class="muted">— 301 / 501</span>
+    </h1>
+    <nav aria-label="utility">
+      <button id="exportCsvBtn" class="btn ghost" title="Export current set to CSV">Export CSV</button>
+      <button id="printBtn" class="btn ghost" title="Print">Print</button>
+      <button id="helpBtn" class="btn ghost" title="Show help">Help</button>
+    </nav>
+  </header>
+
+  <main id="main" class="container" role="main">
+    <section class="card" aria-labelledby="setupTitle">
+      <h2 id="setupTitle">Set setup</h2>
+      <form id="setupForm" class="grid grid-setup" novalidate>
+        <div class="field">
+          <label for="p1">Player 1</label>
+          <input id="p1" name="p1" required maxlength="20" placeholder="Name" />
+        </div>
+        <div class="field">
+          <label for="p2">Player 2</label>
+          <input id="p2" name="p2" required maxlength="20" placeholder="Name" />
+        </div>
+        <div class="field">
+          <label for="startScore">Game type</label>
+          <select id="startScore" name="startScore" required>
+            <option value="301">301 up</option>
+            <option value="501" selected>501 up</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="setSize">Set size (legs)</label>
+          <input id="setSize" name="setSize" type="number" min="1" step="1" value="5" />
+          <small class="muted">Odd number recommended (best of N).</small>
+        </div>
+        <div class="field">
+          <label for="firstThrow">First throw</label>
+          <select id="firstThrow" name="firstThrow">
+            <option value="0">Player 1</option>
+            <option value="1">Player 2</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="bustRule">Bust rule</label>
+          <select id="bustRule" name="bustRule">
+            <option value="off" selected>Manual (off)</option>
+            <option value="on">Auto bust if below 0</option>
+          </select>
+        </div>
+        <div class="actions">
+          <button type="submit" class="btn primary">Start set</button>
+          <button type="button" id="resetSetBtn" class="btn danger" disabled>Reset set</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card" aria-labelledby="scoreboardTitle">
+      <div class="scoreboard-header">
+        <h2 id="scoreboardTitle">Scoreboard</h2>
+        <div class="scoreboard-controls">
+          <button id="newLegBtn" class="btn" disabled>Start next leg</button>
+          <button id="undoBtn" class="btn ghost" disabled>Undo (U)</button>
+          <button id="redoBtn" class="btn ghost" disabled>Redo (R)</button>
+        </div>
+      </div>
+
+      <div id="scoreboard" class="scoreboard" role="region" aria-live="polite" aria-atomic="true">
+        <!-- dynamic -->
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="turnTitle">
+      <h2 id="turnTitle">Enter turn</h2>
+      <form id="turnForm" class="turn-form" novalidate>
+        <div class="turn-inputs">
+          <label for="turnScore" class="sr-only">Turn score</label>
+          <input id="turnScore" name="turnScore" type="number" min="0" max="180" placeholder="Turn total (0–180)" inputmode="numeric" />
+          <input id="turnNote" name="turnNote" maxlength="40" placeholder="Note (e.g. T20, miss)" />
+        </div>
+        <div class="actions">
+          <button type="submit" id="addTurnBtn" class="btn primary" disabled>Add turn</button>
+          <button type="button" id="passBtn" class="btn">Pass</button>
+        </div>
+        <p class="muted small">Tip: Keyboard shortcuts — U: Undo, R: Redo, N: Next leg</p>
+      </form>
+    </section>
+
+    <section class="card" aria-labelledby="historyTitle">
+      <h2 id="historyTitle">Leg history</h2>
+      <div id="history" class="history" role="region" aria-live="polite">
+        <!-- dynamic -->
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="statsTitle">
+      <h2 id="statsTitle">Aggregations & stats</h2>
+      <div id="stats" class="stats-grid">
+        <!-- dynamic -->
+      </div>
+    </section>
+  </main>
+
+  <div id="status" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <dialog id="helpDialog">
+    <form method="dialog">
+      <h3>How to use</h3>
+      <ul>
+        <li>Fill in players, pick <strong>301</strong> or <strong>501</strong>, choose set size (number of legs).</li>
+        <li>Click <em>Start set</em>. The active player is highlighted.</li>
+        <li>Type each turn's total (0–180) and optional note; press <em>Add turn</em>.</li>
+        <li>Use <em>Pass</em> if a player intentionally skips a turn.</li>
+        <li>Edit or delete any turn from the <em>Leg history</em> list.</li>
+        <li>Undo/Redo with the buttons or keyboard (<kbd>U</kbd>/<kbd>R</kbd>).</li>
+        <li>When a player reaches exactly 0, the leg ends; winner gets 1 leg. Start next leg.</li>
+        <li>Set ends when a player wins a majority of legs (best of N). The app declares the winner.</li>
+      </ul>
+      <p class="muted small">Double-out & bull rules are left to the user. Turn notes let you document them.</p>
+      <menu>
+        <button class="btn">Close</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>
